@@ -1,0 +1,35 @@
+body{
+    width: 1440px;
+    padding: 0;
+    margin: 0;
+}
+
+
+.gallery {
+    width: 100%;
+    background-color: rgba(255, 191, 0, 0.244);
+    margin: 100px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 48px;
+    column-gap: 24px;
+    justify-content: center;
+
+}
+
+.gallery-item {    
+    transition: transform 250ms ease-in-out;    
+}
+
+.gallery-item:hover {
+    transform: scale(1.05);    
+}
+
+.gallery-link{
+    cursor: url('../img/hand-down-min.png'), pointer;    
+}
+
+
