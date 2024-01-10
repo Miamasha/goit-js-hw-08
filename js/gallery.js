@@ -64,7 +64,6 @@ const images = [
     },
   ];
 
-
 const gallery = document.querySelector(".gallery");
 let galleryMarkup = images
           .map((image) => `
@@ -86,41 +85,55 @@ let galleryMarkup = images
           .join("");
 gallery.innerHTML = galleryMarkup;
 
+//img hand-down-min не грузиться з інших компьютерів, бо шлях до неї був вказаний у styles.css як:
+//cursor: url('/img/hand-down-min.png'). Виправила на:
+//cursor: url('../img/hand-down-min.png').
+
+//Слухач подій для події "keydown" видаляється в кінці функції escapeButtonHandler.
+//Це зайва дія, оскільки метод onClose робить це автоматично. 
+
+//В обробнику подій галереї перевіряти, чи містить ціль події певний клас, gallery-image.
+//Це призводить до більшої надійності коду.
+
+//Відсутній атрибут alt в зображенні модального вікна!
+
+//Все вище виправлено у gallery.js (тут)
 
 let currentImgSrc;
-let modalWindow = basicLightbox.create(`<img class="light-box-img">`, {
+let currentImgAlt;
+let modalWindow = basicLightbox.create(`<img class="light-box-img" alt="${currentImgAlt}" src="${currentImgSrc}">`, {
   onShow: () => {document.addEventListener("keydown", escapeButtonHandler)},
   onClose: () => {document.removeEventListener("keydown", escapeButtonHandler)}
 });
 //Григорій:
-//Другий аргумент - передається об'єкт налаштувань
-//Тоді при будь-якому закритті знімається слухач.
+//Другий аргумент - передається об'єкт налаштувань. Тоді при будь-якому закритті знімається слухач.
 
 gallery.addEventListener("click", (event) => {  
-  event.preventDefault() // img само не загружається
-  console.log(event.target.nodeName)  
-  if (event.target.nodeName === "IMG") {// користувач клікнув саме по img   
+  event.preventDefault() // img само не загружається, перенесено Onclick з HTML
     
-    console.log(event.target.dataset.source)
-    currentImgSrc = event.target.dataset.source;
-    
-    const lightBoxImg = modalWindow.element().querySelector(".light-box-img"); //нашла  img лайтбокса в модалке
-    lightBoxImg.src = currentImgSrc;
-    modalWindow.show()
+  if (event.target.classList.contains('gallery-image') === false) {// користувач клікнув між img   
+    console.log(event.target.nodeName)
+    return;
   }
-  // document.addEventListener("keydown", escapeButtonHandler); 
+    
+    currentImgSrc = event.target.dataset.source;
+    currentImgAlt = event.target.alt;    
+    
+    const lightBoxImg = modalWindow.element().querySelector(".light-box-img"); //нашла  img в модалке
+    lightBoxImg.src = currentImgSrc;
+    lightBoxImg.alt = currentImgAlt;
+    console.log(lightBoxImg);
+    modalWindow.show()
 })
 //Григорій:
-//Шукати всередені лайтбокса, який створюється бібліотекою.
-//на екземплярі є метод element(), який повертає елемент,
-//зв'язаний з модалкою, замість того,щоб шукати в Документі.
-//Слухача знімати як метод лайтбокса. Якщо з обробника кліка,
-//то не знімається слухач.
+//Img Шукати всередені modalWindow, який створюється бібліотекою лайтбокс.
+//Hа екземплярі є метод element(), який повертає елемент, зв'язаний з модалкою,
+//замість того,щоб шукати в Документі. Слухача знімати як метод лайтбокса.
+//Якщо з обробника кліка, то не знімається слухач.
 
 function escapeButtonHandler(event) {
   if (event.key === "Escape") {
     console.log("key: ", event.key);
     modalWindow.close();
-    document.removeEventListener("keydown", escapeButtonHandler);
   }  
 }

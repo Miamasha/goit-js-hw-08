@@ -90,9 +90,7 @@ gallery.innerHTML = galleryMarkup;
 let currentImgSrc;
 // let modalWindow = basicLightbox.create(`<img>`);
 let modalWindow = basicLightbox.create(`
-
-    <img src = currentImgSrc>
-    
+    <img src = currentImgSrc>    
 `)
 
 gallery.addEventListener("click", (event) => {  
@@ -115,11 +113,9 @@ gallery.addEventListener("click", (event) => {
 } 
 })
 
-
-
 // function findImgInContainer(container){
 //   // TODO: find somehow img from container, use google or chatbot or whatever
-//   // to make it beautiful
+//   // to make it beautiful// Made in gallery.js
 //   const img = container.children[0].children[0]
 //   return img;
 // }
